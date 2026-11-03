@@ -1,0 +1,60 @@
+# .github/workflows/ci.yml
+# Pipeline d'intégration continue d'EduQuizAI.
+# À chaque push ou pull request sur main/develop :
+#   1. on lance les tests du back-end Django
+#   2. on vérifie que le front-end React compile (npm run build)
+#   3. on vérifie que les images Docker se construisent
+
+name: CI EduQuizAI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Installer les dépendances
+        run: |
+          pip install -r requirements.txt
+          pip install coverage
+      - name: Lancer les tests avec couverture
+        env:
+          SECRET_KEY: cle-de-test-ci
+          DEBUG: "False"
+        run: |
+          coverage run manage.py test
+          coverage report --omit="*/migrations/*,manage.py,config/asgi.py,config/wsgi.py"
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+      - run: npm run build
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-build]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire les images Docker
+        run: |
+          docker build -t eduquizai-backend ./backend
+          docker build -t eduquizai-frontend ./frontend
