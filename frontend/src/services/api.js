@@ -180,6 +180,27 @@ export function exportQuizUrl(id, format = "json") {
   return `${API_URL}/quizzes/${id}/export/?format=${format}`;
 }
 
+/**
+ * Télécharge l'export d'un quiz (pdf, csv ou json) AVEC le token JWT.
+ * On récupère le fichier en "blob" puis on déclenche le téléchargement dans le navigateur.
+ */
+export async function downloadQuizExport(quiz, format = "pdf") {
+  if (USE_MOCK) {
+    alert("L'export n'est pas disponible en mode démo.");
+    return;
+  }
+  const response = await request(`/quizzes/${quiz.id}/export/?format=${format}`, { raw: true });
+  if (!response.ok) throw new Error("Impossible d'exporter ce quiz.");
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${quiz.title}.${format}`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 // ------------------- IA (génération de quiz via Ollama) -------------------
 
 /**

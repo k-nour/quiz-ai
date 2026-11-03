@@ -15,7 +15,7 @@ import {
   fetchQuizzes,
   deleteQuiz,
   validateQuiz,
-  exportQuizUrl,
+  downloadQuizExport,
 } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { Card, Button, Badge, Modal, Alert, Spinner, EmptyState } from "../components/ui";
@@ -270,12 +270,10 @@ function QuizRow({ quiz, isTeacher, onDelete, onToggleValidation }) {
             {quiz.validated ? "Invalider" : "Valider"}
           </Button>
         )}
-        <a href={exportQuizUrl(quiz.id, "pdf")} target="_blank" rel="noreferrer">
-          <Button variant="ghost">Export PDF</Button>
-        </a>
-        <a href={exportQuizUrl(quiz.id, "csv")} target="_blank" rel="noreferrer">
-          <Button variant="ghost">Export CSV</Button>
-        </a>
+        {/* Un simple lien <a href> n'envoie pas le token JWT : on télécharge
+            le fichier avec fetch (qui ajoute le header Authorization). */}
+        <Button variant="ghost" onClick={() => downloadQuizExport(quiz, "pdf")}>Export PDF</Button>
+        <Button variant="ghost" onClick={() => downloadQuizExport(quiz, "csv")}>Export CSV</Button>
         {isTeacher && (
           <Button variant="danger" onClick={onDelete}>Supprimer</Button>
         )}

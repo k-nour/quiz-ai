@@ -1,0 +1,55 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+.pyre/
+
+# Django specific
+*.log
+local_settings.py
+/media/
+/staticfiles/
+/static/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+.npm/
+.parcel-cache/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker / OS
+*.tar
+*.pid
+
+# Project local data
+backend/db/*.sqlite3
+backend/db/*.db

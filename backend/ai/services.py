@@ -41,7 +41,7 @@ Réponds UNIQUEMENT avec un JSON valide, sans texte avant ni après, au format e
     {{"type": "qcm", "text": "...", "choices": ["...", "...", "...", "..."], "correct_answer": "...", "explanation": ""}},
     {{"type": "vrai_faux", "text": "...", "choices": [], "correct_answer": "vrai", "explanation": "..."}},
     {{"type": "ouverte", "text": "...", "choices": [], "correct_answer": "...", "explanation": ""}}
-  ]
+  ]-
 }}
 
 COURS :

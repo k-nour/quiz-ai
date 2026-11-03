@@ -124,6 +124,10 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
+    # DRF utilise par défaut le paramètre "?format=" pour choisir le renderer.
+    # Comme notre export utilise aussi "?format=csv|pdf", DRF renvoyait une 404.
+    # On désactive ce comportement pour garder notre paramètre.
+    "URL_FORMAT_OVERRIDE": None,
 }
 
 # ---- Configuration JWT (djangorestframework-simplejwt) ----
