@@ -1,0 +1,56 @@
+# docker-compose.yml
+# Orchestration de l'ensemble de l'application EduQuizAI by SchoolUp.
+# Lance 3 services : le back-end Django, le front-end React, et (en option) Ollama pour l'IA locale.
+# Commande : docker compose up --build
+
+version: "3.9"
+
+services:
+  # ---- BACK-END : API Django REST Framework ----
+  backend:
+    build:
+      context: ./backend
+    container_name: eduquizai_backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app        # montage du code pour le hot-reload en dev
+      - backend_db:/app/db    # persistance du fichier SQLite
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - ollama
+
+  # ---- FRONT-END : React + Vite ----
+  frontend:
+    build:
+      context: ./frontend
+    container_name: eduquizai_frontend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules      # évite d'écraser les node_modules du conteneur
+    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      - backend
+
+  # ---- IA : Ollama (LLM local, optionnel) ----
+  # Si vous avez déjà Ollama installé sur votre machine, vous pouvez supprimer ce service
+  # et pointer OLLAMA_URL vers http://host.docker.internal:11434 dans le .env du backend.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: eduquizai_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  backend_db:
+  ollama_data:

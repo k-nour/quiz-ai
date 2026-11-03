@@ -1,0 +1,31 @@
+/*
+  index.css
+  ---------
+  Importe TailwindCSS et définit les variables CSS de la charte graphique
+  EduQuizAI by SchoolUp. Ces variables sont ensuite utilisées dans tout le projet
+  via les classes Tailwind personnalisées (voir tailwind.config.js : bg-primary, text-accent...).
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #352b83; /* couleur principale (sidebar, titres) */
+  --accent: #fa9547; /* boutons d'action principaux */
+  --secondary: #63cfed; /* accents secondaires (liens, badges) */
+  --danger: #c91e99; /* erreurs / suppression */
+  --text: #1f1b3d; /* couleur du texte */
+  --bg: #f4f3fb; /* fond de page */
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Petite classe utilitaire pour les transitions douces sur les éléments interactifs */
+.transition-app {
+  transition: all 0.15s ease-in-out;
+}
